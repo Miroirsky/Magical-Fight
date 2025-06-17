@@ -1,0 +1,201 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Fight</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="menu-container" class="menu-container">
+        <h1>Magical Fight</h1>
+        <div class="difficulty-selection">
+            <h2>Select Difficulty</h2>
+            <div class="difficulty-options">
+                <div class="difficulty-option" data-hp="3" data-difficulty="very-easy">
+                    <h3>Very Easy</h3>
+                    <p>Perfect for learning the game</p>
+                    <span class="hp-indicator">3 HP</span>
+                </div>
+                <div class="difficulty-option" data-hp="5" data-difficulty="easy">
+                    <h3>Easy</h3>
+                    <p>For casual players</p>
+                    <span class="hp-indicator">5 HP</span>
+                </div>
+                <div class="difficulty-option selected" data-hp="7" data-difficulty="normal">
+                    <h3>Normal</h3>
+                    <p>A balanced experience</p>
+                    <span class="hp-indicator">7 HP</span>
+                </div>
+                <div class="difficulty-option" data-hp="10" data-difficulty="hard">
+                    <h3>Hard</h3>
+                    <p>For players that want a real challenge</p>
+                    <span class="hp-indicator">10 HP</span>
+                </div>
+                <div class="difficulty-option" data-difficulty="custom">
+                    <h3>Custom</h3>
+                    <p>For players that want to experiment with the game</p>
+                    <span class="hp-indicator">Custom</span>
+                </div>
+            </div>
+            <button id="start-game" class="start-btn">Start Game</button>
+            <button id="rules-btn" class="menu-btn">Rules</button>
+        </div>
+    </div>
+
+    <div id="game-container" class="game-container">
+        <div class="difficulty-indicator">
+            <span class="difficulty-label">Difficulty:</span>
+            <span class="difficulty-value" data-difficulty="normal">Normal</span>
+        </div>
+        <h1>Magical Fight</h1>
+        <div class="status-bar">
+            <div class="player-status">
+                <h2>Player</h2>
+                <div class="health-bar">
+                    <div id="player-health" class="health-fill"></div>
+                    <span id="player-health-text">7/7 HP</span>
+                </div>
+                <div class="weapon-limits">
+                    <p>Black Hole: <span id="player-blackhole">2/2</span></p>
+                    <p>Crown: <span id="player-crown">1/1</span></p>
+                </div>
+                <div class="last-move">
+                    <span>Last move:</span>
+                    <div id="player-last-move" class="last-move-icon empty"></div>
+                </div>
+            </div>
+            <div class="computer-status">
+                <h2>Computer</h2>
+                <div class="health-bar">
+                    <div id="computer-health" class="health-fill"></div>
+                    <span id="computer-health-text">7/7 HP</span>
+                </div>
+                <div class="weapon-limits">
+                    <p>Black Hole: <span id="computer-blackhole">2/2</span></p>
+                    <p>Crown: <span id="computer-crown">1/1</span></p>
+                </div>
+                <div class="last-move">
+                    <span>Last move:</span>
+                    <div id="computer-last-move" class="last-move-icon empty"></div>
+                </div>
+            </div>
+        </div>
+        <div id="game-message" class="game-message instant">Choose your weapon!</div>
+        <div class="weapons-grid">
+            <button class="weapon-btn" data-weapon="1">
+                <img src="images/weapons/wizard-stick.png" alt="Magic Staff" class="weapon-icon">
+                <h3>Magic Staff</h3>
+                <p>2 HP damage</p>
+            </button>
+            <button class="weapon-btn" data-weapon="2">
+                <img src="images/weapons/sword.png" alt="Sword" class="weapon-icon">
+                <h3>Sword</h3>
+                <p>1 HP damage</p>
+            </button>
+            <button class="weapon-btn" data-weapon="3">
+                <img src="images/weapons/shield.png" alt="Shield" class="weapon-icon">
+                <h3>Shield</h3>
+                <p>Blocks Sword</p>
+            </button>
+            <button class="weapon-btn" data-weapon="4">
+                <img src="images/weapons/mirror.png" alt="Mirror" class="weapon-icon">
+                <h3>Mirror</h3>
+                <p>Blocks Staff</p>
+            </button>
+            <button class="weapon-btn" data-weapon="5">
+                <img src="images/weapons/black-hole.png" alt="Black Hole" class="weapon-icon">
+                <h3>Black Hole</h3>
+                <p>2 HP (2 uses)</p>
+            </button>
+            <button class="weapon-btn" data-weapon="6">
+                <img src="images/weapons/crown.png" alt="Crown" class="weapon-icon">
+                <h3>Crown</h3>
+                <p>Blocks all (1 use)</p>
+            </button>
+        </div>
+        <button id="restart-btn" class="restart-btn" style="display: none;">New Game</button>
+        <button id="menu-btn" class="menu-btn">Menu</button>
+    </div>
+
+    <div id="confirmation-dialog" class="confirmation-dialog" style="display: none;">
+        <div class="dialog-content">
+            <h3>Return to Menu?</h3>
+            <p>Do you really want to return to the menu? All your progress will be lost.</p>
+            <div class="dialog-buttons">
+                <button id="confirm-yes" class="dialog-btn confirm-btn">Yes, return to menu</button>
+                <button id="confirm-no" class="dialog-btn cancel-btn">No, continue the game</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-dialog" class="confirmation-dialog" style="display: none;">
+        <div class="dialog-content">
+            <h3>Customize Game</h3>
+            <p>Enter your preferred game settings:</p>
+            <div class="custom-inputs">
+                <label for="custom-hp">Health Points (1-50):</label>
+                <input type="number" id="custom-hp" min="1" max="50" value="7">
+                <label for="custom-blackhole">Black Hole Uses (0-5):</label>
+                <input type="number" id="custom-blackhole" min="0" max="5" value="2">
+                <label for="custom-crown">Crown Uses (0-3):</label>
+                <input type="number" id="custom-crown" min="0" max="3" value="1">
+            </div>
+            <div class="dialog-buttons">
+                <button id="custom-confirm" class="dialog-btn confirm-btn">Confirm</button>
+                <button id="custom-cancel" class="dialog-btn cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="rules-dialog" class="confirmation-dialog" style="display: none;">
+        <div class="dialog-content rules-content">
+            <div id="rules-content" class="rules-text"></div>
+            <div class="dialog-buttons">
+                <button id="rules-close" class="dialog-btn cancel-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
