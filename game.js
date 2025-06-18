@@ -199,6 +199,28 @@ class MagicalFight {
             defenderWeapon = 0; // Mirror is broken, treat as no defense
         }
 
+        // Special case: Mirror vs Black Hole
+        if ((attackerWeapon === 5 && defenderWeapon === 4) || (attackerWeapon === 4 && defenderWeapon === 5)) {
+            // Break the mirror
+            const mirrorOwner = defenderWeapon === 4 ? defender : attacker;
+            this.brokenItems[mirrorOwner].mirror = {
+                turns: 2,
+                breakTurn: this.turnCount
+            };
+            
+            // Random damage to one player
+            if (Math.random() < 0.5) {
+                if (attacker === 'player') {
+                    this.playerHealth -= 1;
+                } else {
+                    this.computerHealth -= 1;
+                }
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+
         switch (attackerWeapon) {
             case 1: // Magic Staff
                 if (defenderWeapon === 4) { // Mirror reflects damage without breaking
@@ -281,12 +303,20 @@ class MagicalFight {
             message += "The Shield blocks your Sword! ";
         } else if (computerWeapon === 2 && playerWeapon === 3) {
             message += "Your Shield blocks the Computer's Sword! ";
+        } else if ((playerWeapon === 5 && computerWeapon === 4) || (playerWeapon === 4 && computerWeapon === 5)) {
+            const mirrorOwner = computerWeapon === 4 ? "Computer's" : "Your";
+            message += `The Black Hole's energy shatters the ${mirrorOwner} Mirror! `;
+            if (playerDamage > 0) {
+                message += "The energy backlash hits the Computer! ";
+            } else if (computerDamage > 0) {
+                message += "The energy backlash hits you! ";
+            }
         }
 
-        if (playerDamage > 0) {
+        if (playerDamage > 0 && !message.includes("backlash")) {
             message += `You deal ${playerDamage} damage. `;
         }
-        if (computerDamage > 0) {
+        if (computerDamage > 0 && !message.includes("backlash")) {
             message += `You take ${computerDamage} damage. `;
         }
         if (playerDamage === 0 && computerDamage === 0 && 
