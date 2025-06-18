@@ -282,6 +282,18 @@ h1 {
 
 .difficulty-option[data-difficulty="custom"] .hp-indicator {
     background: rgba(155, 89, 182, 0.2);
+    border: 1px solid rgba(155, 89, 182, 0.3);
+    color: #9b59b6;
+    font-family: monospace;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+.difficulty-option[data-difficulty="custom"]:hover .hp-indicator {
+    background: rgba(155, 89, 182, 0.3);
+    border-color: rgba(155, 89, 182, 0.5);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(155, 89, 182, 0.2);
 }
 
 .difficulty-option.selected[data-hp="3"] {
@@ -381,6 +393,8 @@ h1 {
     max-height: 80vh;
     overflow-y: auto;
     text-align: left;
+    position: relative;
+    padding-top: 20px;
 }
 
 .rules-text {
@@ -403,6 +417,12 @@ h1 {
     font-size: 1.2em;
     margin: 10px 0 8px;
     color: #00cc6a;
+}
+
+.rules-text h4 {
+    font-size: 1.1em;
+    margin: 8px 0 6px;
+    color: #00ff88;
 }
 
 .rules-text p {
@@ -591,4 +611,127 @@ h1 {
 
 .last-move-icon[data-weapon="6"] {
     background-image: url('images/weapons/crown.png');
+}
+
+.close-x-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1001;
+    padding: 0;
+}
+
+.close-x-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.move-history {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 400px;
+    overflow: hidden;
+}
+
+.move-history h3 {
+    color: #00ff88;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.history-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+    transition: min-height 0.3s ease-out;
+}
+
+.history-entries:has(.history-entry:not(.empty)) {
+    min-height: 60px;
+}
+
+.history-entries:has(.history-entry:nth-child(2):not(.empty)) {
+    min-height: 120px;
+}
+
+.history-entries:has(.history-entry:nth-child(3):not(.empty)) {
+    min-height: 180px;
+}
+
+.history-entry {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    height: 50px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.history-entry:not(.empty) {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.history-player, .history-computer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 80px;
+}
+
+.history-weapon {
+    width: 28px;
+    height: 28px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: brightness(0) invert(1);
+}
+
+.history-weapon.empty {
+    opacity: 0.3;
+}
+
+.history-weapon[data-weapon="1"] { background-image: url('images/weapons/wizard-stick.png'); }
+.history-weapon[data-weapon="2"] { background-image: url('images/weapons/sword.png'); }
+.history-weapon[data-weapon="3"] { background-image: url('images/weapons/shield.png'); }
+.history-weapon[data-weapon="4"] { background-image: url('images/weapons/mirror.png'); }
+.history-weapon[data-weapon="5"] { background-image: url('images/weapons/black-hole.png'); }
+.history-weapon[data-weapon="6"] { background-image: url('images/weapons/crown.png'); }
+
+.history-vs {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9em;
+}
+
+.history-damage {
+    font-size: 0.9em;
+    color: #ff4444;
+}
+
+.history-damage:empty::before {
+    content: "-";
+    color: rgba(255, 255, 255, 0.3);
 }

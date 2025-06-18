@@ -26,24 +26,26 @@ A magical combat game inspired by Rock-Paper-Scissors with fantastic weapons!
 - Crown is the ultimate weapon that blocks all attacks
 - Each player can only use 2 Black Holes and 1 Crown per game (or as set in Custom mode)
 
-### Special Rules
+### Special Moves
 
 #### Black Hole Collision
 - If both players use a Black Hole at the same time, a collision occurs
 - A player is randomly chosen and receives 3 HP damage
 - Both Black Holes are consumed
 
-#### Item Destruction
-- If a Sword is used against a Mirror, the Mirror breaks and cannot be used for 2 turns
-- If a Magic Staff is used against a Shield, the Shield breaks and cannot be used for 2 turns
+#### Mirror Reflecting
 - If a Magic Staff is used against a Mirror:
   - The Staff user takes 1 HP reflection damage
   - No direct damage is dealt to the Mirror user
+
+### Item Destruction
+- If a Sword is used against a Mirror, the Mirror breaks and cannot be used for 2 turns
+- If a Magic Staff is used against a Shield, the Shield breaks and cannot be used for 2 turns
 - When an item is destroyed, no direct damage is dealt that turn
 - Broken items are automatically repaired after their 2-turn penalty
 - A broken item cannot be used before being repaired
 
-#### Negative HP and Ties
+### Negative HP and Ties
 - When both players reach 0 or negative HP in the same turn:
   - If both have exactly the same negative HP (e.g., -2 vs -2), they each receive 1 HP and the fight continues
   - If they have different negative HP values (e.g., -1 vs -2), the player with the higher value (closer to 0) wins
