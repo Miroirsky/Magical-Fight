@@ -528,6 +528,123 @@ class MagicalFight {
 document.addEventListener('DOMContentLoaded', () => {
     let currentGame = null;
     let selectedDifficulty = { hp: 7, blackhole: 2, crown: 1 }; // Default to Normal
+    let currentLanguage = localStorage.getItem('language') || 'en';
+
+    // Language translations
+    const translations = {
+        en: {
+            title: "Magical Fight",
+            difficulty: "Difficulty",
+            selectDifficulty: "Select Difficulty",
+            veryEasy: "Very Easy",
+            easy: "Easy",
+            normal: "Normal",
+            hard: "Hard",
+            custom: "Custom",
+            hp: "HP",
+            blackHole: "Black Hole",
+            crown: "Crown",
+            confirm: "Confirm",
+            cancel: "Cancel",
+            chooseWeapon: "Choose your weapon!",
+            playAgain: "Play Again",
+            menu: "Menu",
+            close: "Close",
+            validValues: "Please enter valid values: HP (1-100), Black Hole (0-10), Crown (0-7)"
+        },
+        fr: {
+            title: "Combat Magique",
+            difficulty: "Difficulté",
+            selectDifficulty: "Sélectionner la difficulté",
+            veryEasy: "Très Facile",
+            easy: "Facile",
+            normal: "Normal",
+            hard: "Difficile",
+            custom: "Personnalisé",
+            hp: "PV",
+            blackHole: "Trou Noir",
+            crown: "Couronne",
+            confirm: "Confirmer",
+            cancel: "Annuler",
+            chooseWeapon: "Choisissez votre arme !",
+            playAgain: "Rejouer",
+            menu: "Menu",
+            close: "Fermer",
+            validValues: "Veuillez entrer des valeurs valides : PV (1-100), Trou Noir (0-10), Couronne (0-7)"
+        }
+    };
+
+    // Initialize language
+    function initLanguage() {
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+        });
+        updateTexts();
+    }
+
+    // Update all texts based on current language
+    function updateTexts() {
+        const t = translations[currentLanguage];
+        
+        // Update titles
+        document.querySelectorAll('h1').forEach(el => el.textContent = t.title);
+        
+        // Update difficulty section
+        document.querySelector('.difficulty-label').textContent = t.difficulty + ':';
+        document.querySelector('.difficulty-selection h2').textContent = t.selectDifficulty;
+        
+        // Update buttons
+        document.getElementById('custom-confirm').textContent = t.confirm;
+        document.getElementById('custom-cancel').textContent = t.cancel;
+        document.getElementById('restart-btn').textContent = t.playAgain;
+        document.getElementById('menu-btn').textContent = t.menu;
+        document.querySelectorAll('.close-btn').forEach(btn => btn.textContent = t.close);
+        
+        // Update custom dialog labels
+        document.querySelector('label[for="custom-hp"]').textContent = t.hp;
+        document.querySelector('label[for="custom-blackhole"]').textContent = t.blackHole;
+        document.querySelector('label[for="custom-crown"]').textContent = t.crown;
+        
+        // Update game message if it's the default
+        const gameMessage = document.getElementById('game-message');
+        if (gameMessage.textContent === "Choose your weapon!" || 
+            gameMessage.textContent === "Choisissez votre arme !") {
+            gameMessage.textContent = t.chooseWeapon;
+        }
+        
+        // Update difficulty names
+        const difficultyValue = document.querySelector('.difficulty-value');
+        if (difficultyValue) {
+            const currentDifficulty = difficultyValue.dataset.difficulty;
+            switch (currentDifficulty) {
+                case 'very-easy': difficultyValue.textContent = t.veryEasy; break;
+                case 'easy': difficultyValue.textContent = t.easy; break;
+                case 'normal': difficultyValue.textContent = t.normal; break;
+                case 'hard': difficultyValue.textContent = t.hard; break;
+                case 'custom': 
+                    const hp = selectedDifficulty.hp;
+                    const bh = selectedDifficulty.blackhole;
+                    const c = selectedDifficulty.crown;
+                    difficultyValue.textContent = `${t.custom} (${t.hp}: ${hp}, ${t.blackHole}: ${bh}, ${t.crown}: ${c})`;
+                    break;
+            }
+        }
+    }
+
+    // Add language switch event listeners
+    document.querySelectorAll('.language-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentLanguage = btn.dataset.lang;
+            localStorage.setItem('language', currentLanguage);
+            document.querySelectorAll('.language-btn').forEach(b => {
+                b.classList.toggle('active', b === btn);
+            });
+            updateTexts();
+        });
+    });
+
+    // Initialize language on load
+    initLanguage();
 
     const difficultyOptions = document.querySelectorAll('.difficulty-option');
     const customDialog = document.getElementById('custom-dialog');
@@ -574,8 +691,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const blackhole = parseInt(customBlackholeInput.value);
         const crown = parseInt(customCrownInput.value);
 
-        if (hp < 1 || hp > 100 || blackhole < 0 || blackhole > 10 || crown < 0 || crown > 7 || isNaN(hp) || isNaN(blackhole) || isNaN(crown)) {
-            alert('Please enter valid values: HP (1-100), Black Hole (0-10), Crown (0-7)');
+        if (hp < 1 || hp > 100 || blackhole < 0 || blackhole > 10 || crown < 0 || crown > 7 || 
+            isNaN(hp) || isNaN(blackhole) || isNaN(crown)) {
+            alert(translations[currentLanguage].validValues);
             return;
         }
 
