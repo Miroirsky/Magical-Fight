@@ -48,6 +48,7 @@
 <body>
     <div id="menu-container" class="menu-container">
         <h1>Magical Fight</h1>
+        <div class="version-indicator">[Update 1.1]</div>
         <div class="difficulty-selection">
             <h2>Select Difficulty</h2>
             <div class="difficulty-options">
@@ -82,7 +83,7 @@
         </div>
     </div>
 
-    <div id="game-container" class="game-container">
+    <div id="game-container" class="game-container" style="display: none;">
         <div class="difficulty-indicator">
             <span class="difficulty-label">Difficulty:</span>
             <span class="difficulty-value" data-difficulty="normal">Normal</span>
@@ -191,7 +192,8 @@
                 <p>Blocks all (1 use)</p>
             </button>
         </div>
-        <button id="restart-btn" class="restart-btn" style="display: none;">New Game</button>
+        <button id="restart-btn" class="restart-btn" style="display: none;">Play Again</button>
+        <div class="version-indicator">[Update 1.1]</div>
         <button id="menu-btn" class="menu-btn">Menu</button>
     </div>
 
@@ -213,10 +215,10 @@
             <div class="custom-inputs">
                 <label for="custom-hp">Health Points (1-100):</label>
                 <input type="number" id="custom-hp" min="1" max="100" value="7">
-                <label for="custom-blackhole">Black Hole Uses (0-7):</label>
-                <input type="number" id="custom-blackhole" min="0" max="7" value="2">
-                <label for="custom-crown">Crown Uses (0-5):</label>
-                <input type="number" id="custom-crown" min="0" max="5" value="1">
+                <label for="custom-blackhole">Black Hole Uses (0-10):</label>
+                <input type="number" id="custom-blackhole" min="0" max="10" value="2">
+                <label for="custom-crown">Crown Uses (0-7):</label>
+                <input type="number" id="custom-crown" min="0" max="7" value="1">
             </div>
             <div class="dialog-buttons">
                 <button id="custom-confirm" class="dialog-btn confirm-btn">Confirm</button>

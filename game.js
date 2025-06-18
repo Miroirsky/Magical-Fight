@@ -574,8 +574,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const blackhole = parseInt(customBlackholeInput.value);
         const crown = parseInt(customCrownInput.value);
 
-        if (hp < 1 || hp > 100 || blackhole < 0 || blackhole > 7 || crown < 0 || crown > 5 || isNaN(hp) || isNaN(blackhole) || isNaN(crown)) {
-            alert('Please enter valid values: HP (1-100), Black Hole (0-7), Crown (0-5)');
+        if (hp < 1 || hp > 100 || blackhole < 0 || blackhole > 10 || crown < 0 || crown > 7 || isNaN(hp) || isNaN(blackhole) || isNaN(crown)) {
+            alert('Please enter valid values: HP (1-100), Black Hole (0-10), Crown (0-7)');
             return;
         }
 
@@ -661,14 +661,17 @@ A magical combat game inspired by Rock-Paper-Scissors with fantastic weapons!
    - Easy (For casual players): 5PV
    - Normal (A balanced experience): 7PV
    - Hard (For players that want a real challenge): 10PV
-   - Custom (For players that want to experiment with the game): Custom HP and uses
+   - Custom (For players that want to experiment with the game): 
+     * HP: 1-100
+     * Black Holes: 0-10
+     * Crowns: 0-7
 2. Each turn, choose a weapon from the following:
    - Magic Staff (deals 2 HP damage)
    - Sword (deals 1 HP damage)
    - Shield (blocks the Sword)
    - Mirror (blocks the Magic Staff and reflects 1 HP damage)
-   - Black Hole (deals 2 HP damage, can't be blocked except by Crown, limited to 2 uses)
-   - Crown (blocks all attacks, limited to 1 use)
+   - Black Hole (deals 2 HP damage, can't be blocked except by Crown, limited uses)
+   - Crown (blocks all attacks, limited uses)
 
 ## Detailed Rules
 
@@ -690,10 +693,17 @@ A magical combat game inspired by Rock-Paper-Scissors with fantastic weapons!
   - The Staff user takes 1 HP reflection damage
   - No direct damage is dealt to the Mirror user
 
+#### Mirror vs Black Hole
+- When a Mirror encounters a Black Hole (from either player):
+  - The Mirror breaks and cannot be used for 2 turns
+  - The energy backlash deals 1 HP damage to a randomly chosen player
+  - This creates a risky counter to Black Hole, as the damage could hit either player
+
 ### Item Destruction
 - If a Sword is used against a Mirror, the Mirror breaks and cannot be used for 2 turns
 - If a Magic Staff is used against a Shield, the Shield breaks and cannot be used for 2 turns
-- When an item is destroyed, no direct damage is dealt that turn
+- If a Black Hole meets a Mirror, the Mirror breaks and cannot be used for 2 turns
+- When an item is destroyed, no direct damage is dealt that turn (except for Mirror vs Black Hole)
 - Broken items are automatically repaired after their 2-turn penalty
 - A broken item cannot be used before being repaired
 
